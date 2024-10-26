@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { users } from "../../data/users.ts";
+import "../../styles/SignIn.css";
 
 const SignIn: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -16,31 +17,37 @@ const SignIn: React.FC = () => {
     if (user) {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("userId", user.id.toString());
-      navigate("/library"); // Przekierowanie do biblioteki po zalogowaniu
+      navigate("/library");
     } else {
       setError("Nieprawidłowa nazwa użytkownika lub hasło");
     }
   };
 
   return (
-    <div>
-      <h1>Logowanie</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nazwa użytkownika"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Hasło"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Zaloguj się</button>
-      </form>
+    <div className="signin-container">
+      <div className="signin-card">
+        <h1 className="signin-title">Logowanie</h1>
+        {error && <p className="error-message">{error}</p>}
+        <form onSubmit={handleSubmit} className="signin-form">
+          <input
+            type="text"
+            placeholder="Nazwa użytkownika"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="signin-input"
+          />
+          <input
+            type="password"
+            placeholder="Hasło"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="signin-input"
+          />
+          <button type="submit" className="signin-button">
+            Zaloguj się
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

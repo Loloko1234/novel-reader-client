@@ -53,11 +53,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </li>
             <li className="nav-item">
               {isAuthenticated ? (
-                <button onClick={handleLogout} className="nav-button">
+                <button
+                  onClick={handleLogout}
+                  className="nav-button logout-button"
+                >
                   Wyloguj się
                 </button>
               ) : (
-                <Link to="/signin" className="nav-link">
+                <Link to="/signin" className="nav-button login-button">
                   Zaloguj się
                 </Link>
               )}

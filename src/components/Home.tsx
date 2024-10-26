@@ -2,7 +2,68 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/home.css";
 
+interface Novel {
+  id: number;
+  title: string;
+  author: string;
+  imageUrl: string;
+}
+
 const Home: React.FC = () => {
+  // Mock data for novels
+  const hotNovels: Novel[] = [
+    {
+      id: 1,
+      title: "The Dragon's Revenge",
+      author: "A. Flame",
+      imageUrl: "/solo.jpg",
+    },
+    {
+      id: 2,
+      title: "Cyber Samurai",
+      author: "E. Circuit",
+      imageUrl: "/solo.jpg",
+    },
+    {
+      id: 3,
+      title: "Galactic Odyssey",
+      author: "S. Cosmos",
+      imageUrl: "/solo.jpg",
+    },
+  ];
+
+  const newNovels: Novel[] = [
+    { id: 4, title: "Mystic Runes", author: "M. Spell", imageUrl: "/solo.jpg" },
+    { id: 5, title: "Neon Nights", author: "N. Glow", imageUrl: "/solo.jpg" },
+    {
+      id: 6,
+      title: "Quantum Quest",
+      author: "Q. Particle",
+      imageUrl: "/solo.jpg",
+    },
+  ];
+
+  const renderNovelCategory = (title: string, novels: Novel[]) => (
+    <section className="novel-category">
+      <h2 className="category-title">{title}</h2>
+      <div className="novel-carousel">
+        {novels.map((novel) => (
+          <div key={novel.id} className="novel-card">
+            <img
+              src={novel.imageUrl}
+              alt={novel.title}
+              className="novel-image"
+            />
+            <div className="novel-info">
+              <h3 className="novel-title">{novel.title}</h3>
+              <p className="novel-author">{novel.author}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+
   return (
     <div className="home-container">
       <header className="home-header">
@@ -10,18 +71,11 @@ const Home: React.FC = () => {
         <p className="tagline">Your Epic Adventure Awaits!</p>
       </header>
       <main className="home-main">
-        <section className="features">
-          <h2 className="section-title">Unlock Your Reading Superpowers</h2>
-          <ul className="power-list">
-            <li>Explore a Multiverse of Stories</li>
-            <li>Level Up Your Reading Experience</li>
-            <li>Track Your Hero's Journey</li>
-            <li>Collect Legendary Bookmarks</li>
-          </ul>
-        </section>
+        {renderNovelCategory("Hot Picks 🔥", hotNovels)}
+        {renderNovelCategory("New Releases ✨", newNovels)}
         <section className="cta">
           <Link to="/library" className="cta-button">
-            Enter the Storyverse
+            Explore Full Library
           </Link>
         </section>
       </main>

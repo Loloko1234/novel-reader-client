@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "../styles/NovelLibrary.css";
 
 // Sample data structure for novels
 interface Novel {
@@ -35,7 +36,7 @@ const NovelLibrary: React.FC = () => {
           author: "Author B",
           genre: "Sci-Fi",
           publishedYear: 2019,
-          imageUrl: "/_1.webp", // Use the same or different image
+          imageUrl: "/solo.jpg", // Use the same or different image
         },
         // Add more novels
       ];
@@ -64,28 +65,37 @@ const NovelLibrary: React.FC = () => {
   }, [filter, sortOrder, novels]);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Library</h1>
-        <input
-          type="text"
-          placeholder="Filter by title"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        />
-        <button
-          onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-        >
-          Sort {sortOrder === "asc" ? "Descending" : "Ascending"}
-        </button>
+    <div className="novel-library">
+      <header className="library-header">
+        <h1 className="library-title">Epic Novel Collection</h1>
+        <div className="library-controls">
+          <input
+            type="text"
+            placeholder="Search for epic tales"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="library-search"
+          />
+          <button
+            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+            className="library-sort-button"
+          >
+            Sort {sortOrder === "asc" ? "Z-A" : "A-Z"}
+          </button>
+        </div>
       </header>
-      <div className="grid">
+      <div className="novel-grid">
         {filteredNovels.map((novel) => (
-          <div className="card" key={novel.id}>
-            <img src={novel.imageUrl} alt={novel.title} />
-            <div className="card-content">
-              <h2 className="card-title">{novel.title}</h2>
-              <p className="card-author">{novel.author}</p>
+          <div className="novel-card" key={novel.id}>
+            <img
+              src={novel.imageUrl}
+              alt={novel.title}
+              className="novel-image"
+            />
+            <div className="novel-info">
+              <h2 className="novel-title">{novel.title}</h2>
+              <p className="novel-author">{novel.author}</p>
+              <p className="novel-genre">{novel.genre}</p>
             </div>
           </div>
         ))}
