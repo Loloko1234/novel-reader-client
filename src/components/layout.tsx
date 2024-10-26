@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import "../styles/Layout.css";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,33 +9,66 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("userId");
+    navigate("/");
     setTimeout(() => {
       window.location.reload();
-    }, 100); // 100ms delay before refreshing
-    navigate("/");
+    }, 100);
   };
+
+  const handleLibraryClick = (e: React.MouseEvent) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      navigate("/signin");
+    }
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <div>
-      <header>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Strona główna</Link>
+    <div className="layout">
+      <header className="header">
+        <div className="logo">Novel Reader</div>
+        <nav className={`nav ${isMenuOpen ? "nav-open" : ""}`}>
+          <ul className="nav-list">
+            <li className="nav-item">
+              <Link to="/" className="nav-link">
+                Strona główna
+              </Link>
             </li>
-            {isAuthenticated && (
-              <li>
-                <Link to="/library">Biblioteka</Link>
-              </li>
-            )}
+            <li className="nav-item">
+              <Link
+                to="/library"
+                onClick={handleLibraryClick}
+                className="nav-link"
+              >
+                Biblioteka
+              </Link>
+            </li>
+            <li className="nav-item">
+              {isAuthenticated ? (
+                <button onClick={handleLogout} className="nav-button">
+                  Wyloguj się
+                </button>
+              ) : (
+                <Link to="/signin" className="nav-link">
+                  Zaloguj się
+                </Link>
+              )}
+            </li>
           </ul>
         </nav>
-        {isAuthenticated && <button onClick={handleLogout}>Wyloguj się</button>}
+        <button className="menu-toggle" onClick={toggleMenu}>
+          <span className="menu-icon"></span>
+        </button>
       </header>
-      <main>{children}</main>
+      <main className="main">{children}</main>
     </div>
   );
 };
