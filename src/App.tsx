@@ -10,6 +10,7 @@ import NovelLibrary from "./components/NovelLibrary.tsx";
 import SignIn from "./api/auth/signin.tsx";
 import Home from "./components/Home.tsx";
 import Layout from "./components/layout.tsx";
+import NovelChapter from "./components/NovelChapter.tsx";
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({
   element,
@@ -29,6 +30,11 @@ function App() {
             path="/library"
             element={<PrivateRoute element={<NovelLibrary />} />}
           />
+          <Route
+            path="/novel-chapter"
+            element={<PrivateRoute element={<NovelChapter />} />}
+          />
+          <Route path="/novelchapter" element={<NovelChapter />} />
         </Routes>
       </Layout>
     </Router>
