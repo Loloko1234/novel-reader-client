@@ -16,7 +16,7 @@ const SignIn: React.FC = () => {
     if (user) {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("userId", user.id.toString());
-      navigate("/");
+      navigate("/library"); // Przekierowanie do biblioteki po zalogowaniu
     } else {
       setError("Nieprawidłowa nazwa użytkownika lub hasło");
     }

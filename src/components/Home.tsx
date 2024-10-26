@@ -1,20 +1,24 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Home: React.FC = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("userId");
-    navigate("/signin");
-  };
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
 
   return (
     <div>
-      <h1>Strona główna</h1>
-      <p>Witaj na stronie głównej aplikacji Novel Reader!</p>
-      <button onClick={handleLogout}>Wyloguj się</button>
+      <h1>Witaj w Novel Reader</h1>
+      <p>Twoja ulubiona aplikacja do czytania powieści online!</p>
+      <nav>
+        <ul>
+          {isAuthenticated ? (
+            <li>Zalogowany</li>
+          ) : (
+            <li>
+              <Link to="/signin">Zaloguj się</Link>
+            </li>
+          )}
+        </ul>
+      </nav>
     </div>
   );
 };

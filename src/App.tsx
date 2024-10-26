@@ -9,6 +9,7 @@ import "./styles/app.css";
 import NovelLibrary from "./components/NovelLibrary.tsx";
 import SignIn from "./api/auth/signin.tsx";
 import Home from "./components/Home.tsx";
+import Layout from "./components/layout.tsx";
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({
   element,
@@ -20,16 +21,16 @@ const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({
 function App() {
   return (
     <Router>
-      <div className="App">
+      <Layout>
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/" element={<PrivateRoute element={<Home />} />} />
           <Route
             path="/library"
             element={<PrivateRoute element={<NovelLibrary />} />}
           />
         </Routes>
-      </div>
+      </Layout>
     </Router>
   );
 }
