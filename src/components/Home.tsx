@@ -26,7 +26,6 @@ const Home: React.FC = () => {
 
   if (isLoading) return <div>Ładowanie...</div>;
   if (error) return <div>Błąd: {error}</div>;
-  if (!novel) return <div>Nie znaleziono powieści</div>;
 
   return (
     <div className="home-container">
@@ -36,19 +35,32 @@ const Home: React.FC = () => {
       </header>
       <main className="home-main">
         <section className="novel-category">
-          <h2 className="category-title">Featured Novel</h2>
-          <div className="novel-card">
-            <div className="novel-info">
-              <h3 className="novel-title">{novel.title}</h3>
-              <p className="novel-author">{novel.author}</p>
-              <p className="novel-description">{novel.description}</p>
-              <p className="novel-chapters">
-                Chapters: {novel.last_chapter_number}
-              </p>
-              <Link to={`/novel/${novel.id}`} className="read-button">
-                Read Now
-              </Link>
-            </div>
+          <h2 className="category-title">Featured Novels</h2>
+          <div className="novel-grid">
+            {novel ? (
+              <div
+                className="novel-card"
+                style={{ backgroundImage: `url(${novel.cover_image_url})` }}
+              >
+                <div className="novel-info">
+                  <h3 className="novel-title">{novel.title}</h3>
+                  <p className="novel-author">{novel.author}</p>
+                  <p className="novel-chapters">
+                    Chapters: {novel.last_chapter_number}
+                  </p>
+                  <Link to={`/novel/${novel.id}`} className="read-button">
+                    Read Now
+                  </Link>
+                </div>
+              </div>
+            ) : null}
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="novel-card empty-card">
+                <div className="novel-info">
+                  <h3 className="novel-title">Coming Soon</h3>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
         <section className="cta">
