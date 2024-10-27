@@ -1,25 +1,37 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-interface TitleData {
+interface Chapter {
   title: string;
+  url: string;
+}
+
+interface NovelData {
+  title: string;
+  chapters: Chapter[];
+  has_more: boolean;
+  total_chapters: number;
+  current_page: number;
+  total_pages: number;
 }
 
 const NovelChapter: React.FC = () => {
-  const [titleData, setTitleData] = useState<TitleData | null>(null);
+  const [novelData, setNovelData] = useState<NovelData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const fetchTitle = async () => {
+    const fetchNovelData = async () => {
       try {
-        const response = await axios.get<TitleData>(
-          "http://localhost:5000/api/novel-chapter"
+        setIsLoading(true);
+        const response = await axios.get<NovelData>(
+          `http://localhost:5000/api/novel-chapter?page=${currentPage}`
         );
-        setTitleData(response.data);
+        setNovelData(response.data);
       } catch (err) {
         setError(
-          "Nie udało się pobrać tytułu: " +
+          "Nie udało się pobrać danych: " +
             (err instanceof Error ? err.message : String(err))
         );
       } finally {
@@ -27,16 +39,35 @@ const NovelChapter: React.FC = () => {
       }
     };
 
-    fetchTitle();
-  }, []);
+    fetchNovelData();
+  }, [currentPage]);
+
+  const loadMoreChapters = () => {
+    if (novelData && currentPage < novelData.total_pages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   if (isLoading) return <div>Ładowanie...</div>;
   if (error) return <div>Błąd: {error}</div>;
-  if (!titleData) return <div>Brak danych</div>;
+  if (!novelData) return <div>Brak danych</div>;
 
   return (
     <div>
-      <h1>{titleData.title}</h1>
+      <h1>{novelData.title}</h1>
+      <ul>
+        {novelData.chapters.map((chapter, index) => (
+          <li key={index}>
+            <a href={chapter.url}>{chapter.title}</a>
+          </li>
+        ))}
+      </ul>
+      {currentPage < novelData.total_pages && (
+        <button onClick={loadMoreChapters}>Załaduj więcej rozdziałów</button>
+      )}
+      <div>
+        Strona {currentPage} z {novelData.total_pages}
+      </div>
     </div>
   );
 };
