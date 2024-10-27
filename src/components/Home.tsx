@@ -1,31 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { fetchNovel, Novel } from "../api/novel.ts";
+import { fetchNovels, Novel } from "../api/novel.ts";
 import "../styles/home.css";
 
 const Home: React.FC = () => {
-  const [novel, setNovel] = useState<Novel | null>(null);
+  const [novels, setNovels] = useState<Novel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadNovel = async () => {
+    const loadNovels = async () => {
       try {
-        const fetchedNovel = await fetchNovel(4); // Pobieramy powieść o ID 4
-        setNovel(fetchedNovel);
-      } catch (err) {
-        setError("Nie udało się pobrać danych powieści");
-        console.error(err);
+        setIsLoading(true);
+        const fetchedNovels = await fetchNovels();
+        setNovels(fetchedNovels);
+        setError(null);
+      } catch (err: any) {
+        console.error("Error fetching novels:", err);
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "Nie udało się pobrać danych powieści"
+        );
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadNovel();
+    loadNovels();
   }, []);
 
-  if (isLoading) return <div>Ładowanie...</div>;
-  if (error) return <div>Błąd: {error}</div>;
+  if (isLoading)
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner">Ładowanie...</div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="error-container">
+        <div className="error-message">
+          <h2>Błąd:</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>
+            Spróbuj ponownie
+          </button>
+        </div>
+      </div>
+    );
 
   return (
     <div className="home-container">
@@ -37,8 +60,9 @@ const Home: React.FC = () => {
         <section className="novel-category">
           <h2 className="category-title">Featured Novels</h2>
           <div className="novel-grid">
-            {novel ? (
+            {novels.map((novel) => (
               <div
+                key={novel.id}
                 className="novel-card"
                 style={{ backgroundImage: `url(${novel.cover_image_url})` }}
               >
@@ -53,9 +77,9 @@ const Home: React.FC = () => {
                   </Link>
                 </div>
               </div>
-            ) : null}
-            {[...Array(3)].map((_, index) => (
-              <div key={index} className="novel-card empty-card">
+            ))}
+            {[...Array(Math.max(0, 4 - novels.length))].map((_, index) => (
+              <div key={`empty-${index}`} className="novel-card empty-card">
                 <div className="novel-info">
                   <h3 className="novel-title">Coming Soon</h3>
                 </div>

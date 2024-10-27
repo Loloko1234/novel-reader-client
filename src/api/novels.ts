@@ -7,7 +7,7 @@ export interface Novel {
   description: string;
   last_chapter_number: number;
   base_url: string;
-  cover_image_url: string; // Dodaj to pole
+  cover_image_url: string;
 }
 
 export const fetchNovel = async (id: number): Promise<Novel> => {
